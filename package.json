@@ -19,10 +19,14 @@
   "homepage": "https://github.com/vuduy2212/bookinghealth-backend#readme",
   "dependencies": {
     "@babel/node": "^7.12.10",
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "method-override": "^3.0.0",
     "mysql2": "^3.3.2",
     "sequelize": "^6.31.1"
   },
