@@ -1,8 +1,8 @@
 import authRouter from './auth';
 import storedRouter from './stored';
 function Route(app) {
-    app.use('/auth', authRouter);
-    app.use('/stored', storedRouter);
+    app.use('/api/auth', authRouter);
+    app.use('/api/stored', storedRouter);
 }
 
 module.exports = Route;

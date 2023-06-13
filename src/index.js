@@ -5,11 +5,21 @@ import dotenv from 'dotenv';
 import connectDB from './config/connectDb.js';
 import bodyParser from 'body-parser';
 import Route from './routes/index.js';
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const corsOptions = {
+    origin: '*',
+    credentials: true, //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
+};
+
 const methodOverride = require('method-override');
 dotenv.config();
 const port = process.env.PORT;
 const app = express();
+app.use(cors(corsOptions));
 app.use(methodOverride('_method'));
+app.use(cookieParser());
 //app.use(morgan('combined'));
 app.use(
     bodyParser.urlencoded({
