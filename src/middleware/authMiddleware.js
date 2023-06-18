@@ -16,6 +16,25 @@ const authMiddleware = {
             return res.status(401).json("You 're not authenticated");
         }
     },
+    verifyTokenAndUserAuthorization(req, res, next) {
+        authMiddleware.verifyToken(req, res, () => {
+            console.log(req.user.id);
+            if (req.user.id == req.params.id || req.user.roleId == 'R1') {
+                next();
+            } else {
+                res.status(403).json("You're not allowed to do that!");
+            }
+        });
+    },
+    verifyTokenAndAdmin(req, res, next) {
+        authMiddleware.verifyToken(req, res, () => {
+            if (req.user.roleId === 'R1') {
+                next();
+            } else {
+                res.status(403).json("You're not allowed to do that!");
+            }
+        });
+    },
 };
 
 module.exports = authMiddleware;
