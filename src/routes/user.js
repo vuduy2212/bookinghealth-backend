@@ -9,4 +9,21 @@ router.patch(
     userController.updateOneUser
 );
 
+router.get(
+    '/get-all/unconfirmed',
+    authMiddleware.verifyTokenAndAdmin,
+    userController.getAllUnConfirmed
+);
+router.get(
+    '/get-all/:role',
+    authMiddleware.verifyTokenAndAdmin,
+    userController.getAllOneRole
+);
+
+router.delete(
+    '/delete/:id',
+    authMiddleware.verifyTokenAndAdmin,
+    userController.deleteUser
+);
+
 module.exports = router;

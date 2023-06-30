@@ -18,7 +18,6 @@ const authMiddleware = {
     },
     verifyTokenAndUserAuthorization(req, res, next) {
         authMiddleware.verifyToken(req, res, () => {
-            console.log(req.user.id);
             if (req.user.id == req.params.id || req.user.roleId == 'R1') {
                 next();
             } else {

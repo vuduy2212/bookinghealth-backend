@@ -5,6 +5,20 @@ const salt = bcrypt.genSaltSync(10);
 const authController = {
     async registerUser(req, res) {
         try {
+            const usedEmail = await db.User.findOne({
+                where: { email: req.body.email },
+            });
+            const usedPhone = await db.User.findOne({
+                where: { phoneNumber: req.body.phoneNumber },
+            });
+            if (usedEmail) {
+                return res
+                    .status(404)
+                    .json('Email đã được sử dụng, vui lòng thử email khác');
+            }
+            if (usedPhone) {
+                return res.status(404).json('Số điện thoại đã được sử dụng');
+            }
             const hashed = await bcrypt.hashSync(req.body.password, salt);
             const newUser = await db.User.create({
                 firstName: req.body.firstName,
@@ -12,7 +26,7 @@ const authController = {
                 phoneNumber: req.body.phoneNumber,
                 email: req.body.email,
                 password: hashed,
-                roldId: 'R3',
+                roleId: req.body.roleId,
             });
             return res.status(200).json(newUser);
         } catch (err) {
@@ -24,7 +38,7 @@ const authController = {
         return jwt.sign(
             {
                 id: user.id,
-                roldId: user.roldId,
+                roleId: user.roleId,
             },
             process.env.JWT_ACCESS_KEY,
             {
@@ -37,7 +51,7 @@ const authController = {
         return jwt.sign(
             {
                 id: user.id,
-                roldId: user.roldId,
+                roleId: user.roleId,
             },
             process.env.JWT_REFRESH_KEY,
             {
@@ -67,6 +81,13 @@ const authController = {
                     .status(404)
                     .json('Mật khẩu không đúng, vui lòng thử lại');
             }
+            if (user.roleId === 'R1x' || user.roleId === 'R2x') {
+                return res
+                    .status(404)
+                    .json(
+                        'Tài khoản của bạn chưa được xác thực!  Vui lòng liên hệ admin để xác thực tài khoản'
+                    );
+            }
             if (user && validPassword) {
                 const accessToken = authController.generateAccessToken(user);
                 const refreshToken = authController.generateRefreshToken(user);
@@ -75,6 +96,7 @@ const authController = {
                     secure: false,
                     path: '/',
                     sameSite: 'strict',
+                    maxAge: 365 * 24 * 60 * 60 * 1000,
                 });
                 const { password, ...others } = user.dataValues;
                 return res.status(200).json({ ...others, accessToken });
@@ -103,6 +125,7 @@ const authController = {
                 secure: false,
                 path: '/',
                 sameSite: 'strict',
+                maxAge: 365 * 24 * 60 * 60 * 1000,
             });
             return res.status(200).json({ accessToken: newAccessToken });
         });
