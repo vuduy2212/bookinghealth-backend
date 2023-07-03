@@ -21,12 +21,14 @@ app.use(cors(corsOptions));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
 //app.use(morgan('combined'));
-app.use(
-    bodyParser.urlencoded({
-        extended: true,
-    })
-);
-app.use(bodyParser.json());
+// app.use(
+//     bodyParser.urlencoded({
+//         extended: true,
+//     })
+// );
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+//app.use(bodyParser.json());
 viewEngine(app);
 Route(app);
 connectDB();
