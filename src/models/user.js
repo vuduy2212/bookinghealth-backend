@@ -1,5 +1,5 @@
 'use strict';
-const { Model } = require('sequelize');
+const { Model, STRING } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
         /**
@@ -9,6 +9,17 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            User.belongsTo(models.Allcode, {
+                foreignKey: 'positionId',
+                targetKey: 'keyMap',
+                as: 'positionData',
+            });
+            User.belongsTo(models.Allcode, {
+                foreignKey: 'gender',
+                targetKey: 'keyMap',
+                as: 'genderData',
+            });
+            User.hasOne(models.Markdown, { foreignKey: 'doctorId' });
         }
     }
     User.init(
@@ -23,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
             gender: DataTypes.STRING,
             image: DataTypes.STRING,
             roleId: DataTypes.STRING,
+            positionId: DataTypes.STRING, // only doctor
         },
         {
             sequelize,

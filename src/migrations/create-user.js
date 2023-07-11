@@ -40,6 +40,9 @@ module.exports = {
             roleId: {
                 type: Sequelize.STRING,
             },
+            positionId: {
+                type: Sequelize.STRING,
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,
