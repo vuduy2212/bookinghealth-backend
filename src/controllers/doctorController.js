@@ -76,7 +76,7 @@ const doctorController = {
         try {
             let data = await db.User.findOne({
                 where: { id: req.params.id },
-                attributes: { exclude: ['password', 'image'] },
+                attributes: { exclude: ['password'] },
                 include: [
                     {
                         model: db.Markdown,
@@ -97,6 +97,16 @@ const doctorController = {
             });
             res.status(200).json(data);
         } catch (error) {}
+    },
+
+    async bulkCreateSchedule(req, res) {
+        try {
+            console.log(req.body);
+            res.status(200).json('');
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error);
+        }
     },
 };
 

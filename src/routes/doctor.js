@@ -12,4 +12,5 @@ router.patch(
 );
 router.get('/get-profile/:id', doctorController.GetProfileDoctor);
 router.get('/get-detail-doctor/:id', doctorController.GetDetailDoctor);
+router.post('/bulk-create-schedule', doctorController.bulkCreateSchedule);
 module.exports = router;
