@@ -30,7 +30,7 @@ const doctorController = {
     },
     async UpdateProfileDoctor(req, res) {
         try {
-            const profileDoctor = await db.Markdown.findOne({
+            const profileDoctor = db.Markdown.findOne({
                 where: { doctorId: req.params.id },
             });
             if (profileDoctor) {
@@ -101,8 +101,35 @@ const doctorController = {
 
     async bulkCreateSchedule(req, res) {
         try {
-            console.log(req.body);
+            const doctorId = req.body.doctorId;
+            const date = Number(req.body.date);
+            await db.Schedule.destroy({
+                where: { doctorId, date },
+            });
+            await db.Schedule.bulkCreate(req.body.arraySchedule);
             res.status(200).json('');
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error);
+        }
+    },
+    async getoneSchedule(req, res) {
+        try {
+            const doctorId = req.params.id;
+            const date = Number(req.params.date);
+            const data = await db.Schedule.findAll({
+                where: { doctorId, date: date },
+                include: [
+                    {
+                        model: db.Allcode,
+                        as: 'timeTypeData',
+                        attributes: ['value'],
+                    },
+                ],
+                raw: true,
+                nest: true,
+            });
+            res.status(200).json(data);
         } catch (error) {
             console.log(error);
             res.status(500).json(error);

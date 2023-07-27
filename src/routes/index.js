@@ -3,12 +3,14 @@ import storedRouter from './stored';
 import allCodeRouter from './allCode';
 import userRouter from './user';
 import doctorRouter from './doctor';
+import specialistRouter from './specialist';
 function Route(app) {
     app.use('/api/auth', authRouter); // đăng kí, đăng nhập
     app.use('/api/stored', storedRouter);
     app.use('/api/allcode', allCodeRouter); // kí hiệu
     app.use('/api/user', userRouter); // user chung
     app.use('/api/doctor', doctorRouter); // bác sĩ
+    app.use('/api/specialist', specialistRouter); // chuyên khoa
 }
 
 module.exports = Route;

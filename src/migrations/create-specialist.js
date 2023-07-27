@@ -12,11 +12,8 @@ module.exports = {
             name: {
                 type: Sequelize.STRING,
             },
-            description: {
-                type: Sequelize.TEXT,
-            },
             image: {
-                type: Sequelize.TEXT,
+                type: Sequelize.BLOB('long'),
             },
             createdAt: {
                 allowNull: false,

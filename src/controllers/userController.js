@@ -33,7 +33,7 @@ const userController = {
             const data = await db.User.findAll({
                 where: { roleId: role },
                 raw: true,
-                attributes: { exclude: ['password'] },
+                attributes: { exclude: ['password', 'image'] },
             });
             res.status(200).json(data);
         } catch (error) {

@@ -6,7 +6,7 @@ const allCodeController = {
                 where: { type: req.query.type },
                 raw: true,
             });
-            res.json(data);
+            res.status(200).json(data);
         } catch (error) {
             res.status(500).json(error);
         }
