@@ -20,6 +20,18 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'genderData',
             });
             User.hasOne(models.Markdown, { foreignKey: 'doctorId' });
+            User.belongsToMany(models.Clinic, {
+                through: {
+                    model: models.Doctor_Info,
+                },
+                foreignKey: 'doctorId',
+            });
+            User.belongsToMany(models.Specialist, {
+                through: {
+                    model: models.Doctor_Info,
+                },
+                foreignKey: 'doctorId',
+            });
         }
     }
     User.init(

@@ -9,6 +9,13 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Specialist.hasOne(models.Markdown, { foreignKey: 'specialistId' });
+            Specialist.belongsToMany(models.User, {
+                through: {
+                    model: models.Doctor_Info,
+                },
+                foreignKey: 'specialistId',
+            });
         }
     }
     Specialist.init(

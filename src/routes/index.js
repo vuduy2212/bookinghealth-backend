@@ -4,6 +4,7 @@ import allCodeRouter from './allCode';
 import userRouter from './user';
 import doctorRouter from './doctor';
 import specialistRouter from './specialist';
+import clinicRouter from './clinic';
 function Route(app) {
     app.use('/api/auth', authRouter); // đăng kí, đăng nhập
     app.use('/api/stored', storedRouter);
@@ -11,6 +12,7 @@ function Route(app) {
     app.use('/api/user', userRouter); // user chung
     app.use('/api/doctor', doctorRouter); // bác sĩ
     app.use('/api/specialist', specialistRouter); // chuyên khoa
+    app.use('/api/clinic', clinicRouter); // chuyên khoa
 }
 
 module.exports = Route;

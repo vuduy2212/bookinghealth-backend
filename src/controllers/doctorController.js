@@ -23,17 +23,42 @@ const doctorController = {
                     },
                 ],
             });
-            res.status(200).json(response);
+            return res.status(200).json(response);
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     async UpdateProfileDoctor(req, res) {
         try {
-            const profileDoctor = db.Markdown.findOne({
+            const infoDoctor = await db.Doctor_Info.findOne({
                 where: { doctorId: req.params.id },
             });
-            if (profileDoctor) {
+            if (infoDoctor) {
+                await db.Doctor_Info.update(
+                    {
+                        clinicId: req.body.clinicId,
+                        specialistId: req.body.specialistId,
+                        price: req.body.price,
+                    },
+                    {
+                        where: {
+                            doctorId: req.params.id,
+                        },
+                        raw: true,
+                    }
+                );
+            } else {
+                await db.Doctor_Info.create({
+                    doctorId: req.params.id,
+                    clinicId: req.body.clinicId,
+                    specialistId: req.body.specialistId,
+                    price: req.body.price,
+                });
+            }
+            const markdownDoctor = await db.Markdown.findOne({
+                where: { doctorId: req.params.id },
+            });
+            if (markdownDoctor) {
                 await db.Markdown.update(req.body, {
                     where: {
                         doctorId: req.params.id,
@@ -54,22 +79,26 @@ const doctorController = {
             }
         } catch (error) {
             console.log(error);
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     async GetProfileDoctor(req, res) {
         try {
-            const profileDoctor = await db.Markdown.findOne({
-                where: { doctorId: req.params.id },
-            });
-            if (profileDoctor) {
-                return res.status(200).json(profileDoctor);
-            } else {
-                return res.status(200).json({});
-            }
+            const infoDoctor =
+                (await db.Doctor_Info.findOne({
+                    where: { doctorId: req.params.id },
+                    raw: true,
+                })) || {};
+            const markdownDoctor =
+                (await db.Markdown.findOne({
+                    where: { doctorId: req.params.id },
+                    raw: true,
+                })) || {};
+
+            return res.status(200).json({ ...infoDoctor, ...markdownDoctor });
         } catch (error) {
             console.log(error);
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     async GetDetailDoctor(req, res) {
@@ -91,11 +120,26 @@ const doctorController = {
                         as: 'positionData',
                         attributes: ['value'],
                     },
+
+                    {
+                        model: db.Clinic,
+                        attributes: ['name', 'address'],
+                        through: {
+                            attributes: ['price', 'createdAt'],
+                        },
+                    },
+                    {
+                        model: db.Specialist,
+                        attributes: ['name'],
+                        through: {
+                            attributes: [],
+                        },
+                    },
                 ],
                 raw: true,
                 nest: true,
             });
-            res.status(200).json(data);
+            return res.status(200).json(data);
         } catch (error) {}
     },
 
@@ -107,10 +151,10 @@ const doctorController = {
                 where: { doctorId, date },
             });
             await db.Schedule.bulkCreate(req.body.arraySchedule);
-            res.status(200).json('');
+            return res.status(200).json('');
         } catch (error) {
             console.log(error);
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     async getoneSchedule(req, res) {
@@ -129,10 +173,10 @@ const doctorController = {
                 raw: true,
                 nest: true,
             });
-            res.status(200).json(data);
+            return res.status(200).json(data);
         } catch (error) {
             console.log(error);
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
 };

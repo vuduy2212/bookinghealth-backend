@@ -9,6 +9,13 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Clinic.hasOne(models.Markdown, { foreignKey: 'clinicId' });
+            Clinic.belongsToMany(models.User, {
+                through: {
+                    model: models.Doctor_Info,
+                },
+                foreignKey: 'clinicId',
+            });
         }
     }
     Clinic.init(
@@ -16,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
             name: DataTypes.STRING,
             address: DataTypes.STRING,
             phoneNumber: DataTypes.STRING,
-            description: DataTypes.STRING,
             image: DataTypes.STRING,
+            logo: DataTypes.STRING,
         },
         {
             sequelize,

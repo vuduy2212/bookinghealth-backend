@@ -18,11 +18,11 @@ module.exports = {
             phoneNumber: {
                 type: Sequelize.STRING,
             },
-            description: {
-                type: Sequelize.STRING,
-            },
             image: {
-                type: Sequelize.STRING,
+                type: Sequelize.BLOB('long'),
+            },
+            logo: {
+                type: Sequelize.BLOB('long'),
             },
             createdAt: {
                 allowNull: false,
