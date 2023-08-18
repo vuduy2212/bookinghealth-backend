@@ -43,6 +43,15 @@ const authMiddleware = {
             }
         });
     },
+    verifyTokenAndDoctorAndAdmin(req, res, next) {
+        authMiddleware.verifyToken(req, res, () => {
+            if (req.user.roleId === 'R2' || req.user.roleId === 'R1') {
+                next();
+            } else {
+                res.status(403).json("You're not allowed to do that!");
+            }
+        });
+    },
 };
 
 module.exports = authMiddleware;
