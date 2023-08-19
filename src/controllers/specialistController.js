@@ -28,6 +28,27 @@ const specialistController = {
             res.status(500).json(error);
         }
     },
+    async getAllSpecialist(req, res) {
+        try {
+            const response = await db.Specialist.findAll();
+            res.status(200).json(response);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+    async getTopSpecialist(req, res) {
+        try {
+            let limit = Number(req.params.limit);
+            if (!limit) limit = 8;
+            const response = await db.Specialist.findAll({
+                limit,
+                raw: true,
+            });
+            res.status(200).json(response);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
     async getAllSpecialistName(req, res) {
         // no get image
         try {

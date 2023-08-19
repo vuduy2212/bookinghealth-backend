@@ -9,6 +9,7 @@ router.post(
 );
 router.get('/get-all-no-image', clinicController.getAllClinicNoImage);
 router.get('/get-all-name', clinicController.getAllClinicName);
+router.get('/get-limit/:limit', clinicController.getLimitClinic);
 router.get('/get-one/:id', clinicController.getOneClinic);
 router.patch(
     '/update/:id',

@@ -8,6 +8,8 @@ router.post(
     specialistController.createNewSpecialist
 );
 router.get('/get-all-no-image', specialistController.getAllSpecialistNoImage);
+router.get('/get-all', specialistController.getAllSpecialist);
+router.get('/get-limit/:limit', specialistController.getTopSpecialist);
 router.get('/get-all-name', specialistController.getAllSpecialistName);
 router.get('/get-one/:id', specialistController.getOneSpecialist);
 router.patch(

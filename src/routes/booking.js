@@ -39,4 +39,10 @@ router.get(
     authMiddleware.verifyTokenAndDoctorAndAdmin,
     bookingController.getPatientExaminedOneDate
 );
+
+router.get(
+    '/get-all-booking-one-patient/:id',
+    authMiddleware.verifyTokenAndUserAuthorization,
+    bookingController.getAllBookingOnePatient
+);
 module.exports = router;

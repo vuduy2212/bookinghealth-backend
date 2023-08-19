@@ -51,6 +51,22 @@ const clinicController = {
             res.status(500).json(error);
         }
     },
+    async getLimitClinic(req, res) {
+        try {
+            let limit = Number(req.params.limit);
+            if (!limit) limit = 8;
+            const response = await db.Clinic.findAll({
+                limit,
+                raw: true,
+                attributes: {
+                    exclude: ['image'],
+                },
+            });
+            res.status(200).json(response);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
     async getOneClinic(req, res) {
         try {
             const response = await db.Clinic.findOne({

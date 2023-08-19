@@ -4,6 +4,8 @@ import doctorController from '../controllers/doctorController';
 const authMiddleware = require('../middleware/authMiddleware');
 // Get Top Doctor in Home Page
 router.get('/top-doctor-home/:limit', doctorController.getTopDoctorHome);
+router.get('/get-all-one-specialist/:id', doctorController.getAllOneSpecialist);
+router.get('/get-all-one-clinic/:id', doctorController.getAllOneClinic);
 
 // Update profile of 1 Doctor in page UpdateProfile by doctor
 router.patch(

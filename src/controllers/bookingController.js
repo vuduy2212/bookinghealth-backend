@@ -528,5 +528,137 @@ const bookingController = {
             return res.status(500).json(error);
         }
     },
+    async getAllBookingOnePatient(req, res) {
+        try {
+            const data = await db.Booking.findAll({
+                where: {
+                    patientId: req.params.id,
+                },
+                // attributes: {
+                //     exclude: ['result'],
+                // },
+                include: [
+                    {
+                        model: db.Allcode,
+                        as: 'statusIdBooking',
+                        attributes: ['value'],
+                    },
+                    {
+                        model: db.Allcode,
+                        as: 'timeTypeBooking',
+                        attributes: ['value'],
+                    },
+                    {
+                        model: db.User,
+                        as: 'patientData',
+                        attributes: [
+                            'firstName',
+                            'lastName',
+                            'gender',
+                            'address',
+                            'yearOfBirth',
+                            'phoneNumber',
+                        ],
+                        include: [
+                            {
+                                model: db.Allcode,
+                                as: 'genderData',
+                                attributes: ['value'],
+                                raw: true,
+                                nest: true,
+                            },
+                        ],
+                        raw: true,
+                        nest: true,
+                    },
+                    {
+                        model: db.User,
+                        as: 'doctorData',
+                        attributes: [
+                            'firstName',
+                            'lastName',
+                            'gender',
+                            'phoneNumber',
+                            'positionId',
+                        ],
+                        include: [
+                            {
+                                model: db.Allcode,
+                                as: 'genderData',
+                                attributes: ['value'],
+                                raw: true,
+                                nest: true,
+                            },
+                            {
+                                model: db.Allcode,
+                                as: 'positionData',
+                                attributes: ['value'],
+                                raw: true,
+                                nest: true,
+                            },
+
+                            {
+                                model: db.Clinic,
+                                attributes: ['name', 'address'],
+                                through: {
+                                    attributes: ['price'],
+                                },
+                                raw: true,
+                                nest: true,
+                            },
+                            {
+                                model: db.Specialist,
+                                attributes: ['name'],
+                                through: {
+                                    attributes: [],
+                                },
+                            },
+                        ],
+                        raw: true,
+                        nest: true,
+                    },
+                ],
+                raw: true,
+                nest: true,
+            });
+            const dataFinal = data.map((item, index) => {
+                return {
+                    id: item.id,
+                    status: item.statusIdBooking.value,
+                    namePatient:
+                        item.patientData.lastName +
+                        '' +
+                        item.patientData.firstName,
+                    phoneNumberPatient: item.patientData.phoneNumber,
+                    yearOfBirthPatient: item.patientData.yearOfBirth,
+                    genderPatient: item.patientData.genderData.value,
+                    addressPatient: item.patientData.address,
+                    reason: item.reason,
+                    nameDoctor:
+                        item.doctorData.lastName +
+                        '' +
+                        item.doctorData.firstName,
+                    phoneNumberDoctor: item.doctorData.phoneNumber,
+                    genderDoctor: item.doctorData.genderData.value,
+                    positionDoctor: item.doctorData.positionData.value,
+                    clinic: item.doctorData.Clinics.name,
+                    specialist: item.doctorData.Specialists.name,
+                    addressClinic: item.doctorData.Clinics.address,
+                    price: item.doctorData.Clinics.Doctor_Info.price,
+                    time: item.timeTypeBooking.value,
+                    date: new Date(item.date).toLocaleDateString('en-GB'),
+                    result: item.result,
+                    timeBooking:
+                        new Date(item.createdAt).toLocaleTimeString() +
+                        ' ' +
+                        new Date(item.createdAt).toLocaleDateString('en-GB'),
+                };
+            });
+            return res.status(200).json(dataFinal);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(error);
+        }
+    },
 };
 export default bookingController;

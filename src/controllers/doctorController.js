@@ -2,7 +2,7 @@ import db from '../models/index';
 const doctorController = {
     async getTopDoctorHome(req, res) {
         let limit = Number(req.params.limit);
-        if (!limit) limit = 10;
+        if (!limit) limit = 8;
 
         try {
             const response = await db.User.findAll({
@@ -168,6 +168,106 @@ const doctorController = {
                         model: db.Allcode,
                         as: 'timeTypeData',
                         attributes: ['value'],
+                    },
+                ],
+                raw: true,
+                nest: true,
+            });
+            return res.status(200).json(data);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(error);
+        }
+    },
+    async getAllOneSpecialist(req, res) {
+        try {
+            const specialistId = req.params.id;
+
+            const data = await db.Doctor_Info.findAll({
+                where: { specialistId },
+                include: [
+                    {
+                        model: db.User,
+                        include: [
+                            {
+                                model: db.Markdown,
+                                attributes: [
+                                    'description',
+                                    'contentHTML',
+                                    'contentMarkdown',
+                                ],
+                            },
+                            {
+                                model: db.Allcode,
+                                as: 'positionData',
+                                attributes: ['value'],
+                            },
+
+                            {
+                                model: db.Clinic,
+                                attributes: ['name', 'address'],
+                                through: {
+                                    attributes: ['price', 'createdAt'],
+                                },
+                            },
+                            {
+                                model: db.Specialist,
+                                attributes: ['name'],
+                                through: {
+                                    attributes: [],
+                                },
+                            },
+                        ],
+                    },
+                ],
+                raw: true,
+                nest: true,
+            });
+            return res.status(200).json(data);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(error);
+        }
+    },
+    async getAllOneClinic(req, res) {
+        try {
+            const clinicId = req.params.id;
+
+            const data = await db.Doctor_Info.findAll({
+                where: { clinicId },
+                include: [
+                    {
+                        model: db.User,
+                        include: [
+                            {
+                                model: db.Markdown,
+                                attributes: [
+                                    'description',
+                                    'contentHTML',
+                                    'contentMarkdown',
+                                ],
+                            },
+                            {
+                                model: db.Allcode,
+                                as: 'positionData',
+                                attributes: ['value'],
+                            },
+
+                            {
+                                model: db.Clinic,
+                                attributes: ['name', 'address'],
+                                through: {
+                                    attributes: ['price', 'createdAt'],
+                                },
+                            },
+                            {
+                                model: db.Specialist,
+                                attributes: ['name'],
+                                through: {
+                                    attributes: [],
+                                },
+                            },
+                        ],
                     },
                 ],
                 raw: true,
