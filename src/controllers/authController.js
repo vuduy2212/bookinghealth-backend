@@ -11,15 +11,15 @@ const authController = {
             const usedPhone = await db.User.findOne({
                 where: { phoneNumber: req.body.phoneNumber },
             });
+
             if (usedEmail) {
-                return res
-                    .status(404)
-                    .json('Email đã được sử dụng, vui lòng thử email khác');
+                return res.status(404).json('Email đã được sử dụng, vui lòng thử email khác');
             }
             if (usedPhone) {
                 return res.status(404).json('Số điện thoại đã được sử dụng');
             }
             const hashed = await bcrypt.hashSync(req.body.password, salt);
+
             const newUser = await db.User.create({
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
@@ -43,7 +43,7 @@ const authController = {
             process.env.JWT_ACCESS_KEY,
             {
                 expiresIn: '20s',
-            }
+            },
         );
     },
 
@@ -56,7 +56,7 @@ const authController = {
             process.env.JWT_REFRESH_KEY,
             {
                 expiresIn: '365d',
-            }
+            },
         );
     },
 
@@ -68,25 +68,16 @@ const authController = {
                 },
             });
             if (!user) {
-                return res
-                    .status(404)
-                    .json('Email không đúng, vui lòng thử lại');
+                return res.status(404).json('Email không đúng, vui lòng thử lại');
             }
-            const validPassword = await bcrypt.compare(
-                req.body.password,
-                user.password
-            );
+            const validPassword = await bcrypt.compare(req.body.password, user.password);
             if (!validPassword) {
-                return res
-                    .status(404)
-                    .json('Mật khẩu không đúng, vui lòng thử lại');
+                return res.status(404).json('Mật khẩu không đúng, vui lòng thử lại');
             }
             if (user.roleId === 'R1x' || user.roleId === 'R2x') {
                 return res
                     .status(404)
-                    .json(
-                        'Tài khoản của bạn chưa được xác thực!  Vui lòng liên hệ admin để xác thực tài khoản'
-                    );
+                    .json('Tài khoản của bạn chưa được xác thực!  Vui lòng liên hệ admin để xác thực tài khoản');
             }
             if (user && validPassword) {
                 const accessToken = authController.generateAccessToken(user);
@@ -134,6 +125,35 @@ const authController = {
     async logOut(req, res) {
         res.clearCookie('refreshToken');
         res.status(200).json('Logged out successfully!');
+    },
+
+    async createClinicAdmin(req, res) {
+        try {
+            const usedEmail = await db.User.findOne({
+                where: { email: req.body.email },
+            });
+            const usedPhone = await db.User.findOne({
+                where: { phoneNumber: req.body.phoneNumber },
+            });
+            if (usedEmail) {
+                return res.status(404).json('Email đã được sử dụng, vui lòng thử email khác');
+            }
+            if (usedPhone) {
+                return res.status(404).json('Số điện thoại đã được sử dụng');
+            }
+            const hashed = await bcrypt.hashSync(req.body.password, salt);
+            const newUser = await db.User.create({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                phoneNumber: req.body.phoneNumber,
+                email: req.body.email,
+                password: hashed,
+                roleId: 'R4',
+            });
+            return res.status(200).json(newUser);
+        } catch (err) {
+            return res.status(500).json(err);
+        }
     },
 };
 

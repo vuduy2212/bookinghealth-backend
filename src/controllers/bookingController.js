@@ -15,15 +15,13 @@ const bookingController = {
             if (schedule === null) {
                 return res.status(200).json({
                     schedule: false,
-                    message:
-                        'Xin lỗi! Bác sĩ không có lịch khám vào khung giờ này',
+                    message: 'Xin lỗi! Bác sĩ không có lịch khám vào khung giờ này',
                 });
             }
             if (schedule.currentNumber >= schedule.maxNumber) {
                 return res.status(200).json({
                     schedule: false,
-                    message:
-                        'Xin lỗi! Số lượng bệnh nhân trong khung giờ này đã đầy',
+                    message: 'Xin lỗi! Số lượng bệnh nhân trong khung giờ này đã đầy',
                 });
             }
             const booking = await db.Booking.findOrCreate({
@@ -51,7 +49,7 @@ const bookingController = {
                             ...schedule,
                         },
                         raw: true,
-                    }
+                    },
                 );
                 return res.status(200).json({
                     schedule: true,
@@ -62,8 +60,7 @@ const bookingController = {
                 return res.status(200).json({
                     schedule: true,
                     created: false,
-                    message:
-                        'The appointment failed because you already made an appointment for this time slot',
+                    message: 'The appointment failed because you already made an appointment for this time slot',
                 });
             }
         } catch (error) {
@@ -87,14 +84,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'patientData',
-                        attributes: [
-                            'firstName',
-                            'lastName',
-                            'gender',
-                            'address',
-                            'yearOfBirth',
-                            'phoneNumber',
-                        ],
+                        attributes: ['firstName', 'lastName', 'gender', 'address', 'yearOfBirth', 'phoneNumber'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -110,13 +100,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'doctorData',
-                        attributes: [
-                            'firstName',
-                            'lastName',
-                            'gender',
-                            'phoneNumber',
-                            'positionId',
-                        ],
+                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber', 'positionId'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -160,19 +144,13 @@ const bookingController = {
             const dataFinal = data.map((item, index) => {
                 return {
                     id: item.id,
-                    namePatient:
-                        item.patientData.lastName +
-                        '' +
-                        item.patientData.firstName,
+                    namePatient: item.patientData.lastName + '' + item.patientData.firstName,
                     phoneNumberPatient: item.patientData.phoneNumber,
                     yearOfBirthPatient: item.patientData.yearOfBirth,
                     genderPatient: item.patientData.genderData.value,
                     addressPatient: item.patientData.address,
                     reason: item.reason,
-                    nameDoctor:
-                        item.doctorData.lastName +
-                        '' +
-                        item.doctorData.firstName,
+                    nameDoctor: item.doctorData.lastName + '' + item.doctorData.firstName,
                     phoneNumberDoctor: item.doctorData.phoneNumber,
                     genderDoctor: item.doctorData.genderData.value,
                     positionDoctor: item.doctorData.positionData.value,
@@ -208,7 +186,7 @@ const bookingController = {
                         statusId: 'S1',
                     },
                     raw: true,
-                }
+                },
             );
             return res.status(200).json('Confirm Booking Successfully');
         } catch (error) {
@@ -249,7 +227,7 @@ const bookingController = {
                         ...schedule,
                     },
                     raw: true,
-                }
+                },
             );
             return res.status(200).json('CanCel Booking Successfully');
         } catch (error) {
@@ -275,14 +253,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'patientData',
-                        attributes: [
-                            'firstName',
-                            'lastName',
-                            'gender',
-                            'address',
-                            'yearOfBirth',
-                            'phoneNumber',
-                        ],
+                        attributes: ['firstName', 'lastName', 'gender', 'address', 'yearOfBirth', 'phoneNumber'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -298,13 +269,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'doctorData',
-                        attributes: [
-                            'firstName',
-                            'lastName',
-                            'gender',
-                            'phoneNumber',
-                            'positionId',
-                        ],
+                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber', 'positionId'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -348,19 +313,13 @@ const bookingController = {
             const dataFinal = data.map((item, index) => {
                 return {
                     id: item.id,
-                    namePatient:
-                        item.patientData.lastName +
-                        '' +
-                        item.patientData.firstName,
+                    namePatient: item.patientData.lastName + '' + item.patientData.firstName,
                     phoneNumberPatient: item.patientData.phoneNumber,
                     yearOfBirthPatient: item.patientData.yearOfBirth,
                     genderPatient: item.patientData.genderData.value,
                     addressPatient: item.patientData.address,
                     reason: item.reason,
-                    nameDoctor:
-                        item.doctorData.lastName +
-                        '' +
-                        item.doctorData.firstName,
+                    nameDoctor: item.doctorData.lastName + '' + item.doctorData.firstName,
                     phoneNumberDoctor: item.doctorData.phoneNumber,
                     genderDoctor: item.doctorData.genderData.value,
                     positionDoctor: item.doctorData.positionData.value,
@@ -396,7 +355,7 @@ const bookingController = {
                         statusId: 'S2',
                     },
                     raw: true,
-                }
+                },
             );
             return res.status(200).json('Finished Examination');
         } catch (error) {
@@ -420,14 +379,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'patientData',
-                        attributes: [
-                            'firstName',
-                            'lastName',
-                            'gender',
-                            'address',
-                            'yearOfBirth',
-                            'phoneNumber',
-                        ],
+                        attributes: ['firstName', 'lastName', 'gender', 'address', 'yearOfBirth', 'phoneNumber'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -443,13 +395,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'doctorData',
-                        attributes: [
-                            'firstName',
-                            'lastName',
-                            'gender',
-                            'phoneNumber',
-                            'positionId',
-                        ],
+                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber', 'positionId'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -493,19 +439,13 @@ const bookingController = {
             const dataFinal = data.map((item, index) => {
                 return {
                     id: item.id,
-                    namePatient:
-                        item.patientData.lastName +
-                        '' +
-                        item.patientData.firstName,
+                    namePatient: item.patientData.lastName + '' + item.patientData.firstName,
                     phoneNumberPatient: item.patientData.phoneNumber,
                     yearOfBirthPatient: item.patientData.yearOfBirth,
                     genderPatient: item.patientData.genderData.value,
                     addressPatient: item.patientData.address,
                     reason: item.reason,
-                    nameDoctor:
-                        item.doctorData.lastName +
-                        '' +
-                        item.doctorData.firstName,
+                    nameDoctor: item.doctorData.lastName + '' + item.doctorData.firstName,
                     phoneNumberDoctor: item.doctorData.phoneNumber,
                     genderDoctor: item.doctorData.genderData.value,
                     positionDoctor: item.doctorData.positionData.value,
@@ -551,14 +491,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'patientData',
-                        attributes: [
-                            'firstName',
-                            'lastName',
-                            'gender',
-                            'address',
-                            'yearOfBirth',
-                            'phoneNumber',
-                        ],
+                        attributes: ['firstName', 'lastName', 'gender', 'address', 'yearOfBirth', 'phoneNumber'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -574,13 +507,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'doctorData',
-                        attributes: [
-                            'firstName',
-                            'lastName',
-                            'gender',
-                            'phoneNumber',
-                            'positionId',
-                        ],
+                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber', 'positionId'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -625,19 +552,13 @@ const bookingController = {
                 return {
                     id: item.id,
                     status: item.statusIdBooking.value,
-                    namePatient:
-                        item.patientData.lastName +
-                        '' +
-                        item.patientData.firstName,
+                    namePatient: item.patientData.lastName + '' + item.patientData.firstName,
                     phoneNumberPatient: item.patientData.phoneNumber,
                     yearOfBirthPatient: item.patientData.yearOfBirth,
                     genderPatient: item.patientData.genderData.value,
                     addressPatient: item.patientData.address,
                     reason: item.reason,
-                    nameDoctor:
-                        item.doctorData.lastName +
-                        '' +
-                        item.doctorData.firstName,
+                    nameDoctor: item.doctorData.lastName + '' + item.doctorData.firstName,
                     phoneNumberDoctor: item.doctorData.phoneNumber,
                     genderDoctor: item.doctorData.genderData.value,
                     positionDoctor: item.doctorData.positionData.value,

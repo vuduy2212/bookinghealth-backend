@@ -4,6 +4,9 @@ const authController = require('../controllers/authController');
 // Register
 router.post('/register', authController.registerUser);
 
+//Create Clinic Admin Page
+router.post('/create-clinic-admin', authController.createClinicAdmin);
+
 // Login
 router.post('/login', authController.loginUser);
 
