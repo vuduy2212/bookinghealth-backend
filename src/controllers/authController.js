@@ -1,6 +1,7 @@
 import db from '../models/index';
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
 const salt = bcrypt.genSaltSync(10);
 const authController = {
     async registerUser(req, res) {
@@ -153,6 +154,32 @@ const authController = {
             return res.status(200).json(newUser);
         } catch (err) {
             return res.status(500).json(err);
+        }
+    },
+
+    async testEmail(req, res) {
+        try {
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'vuduy.22122002@gmail.com',
+                    pass: 'vxjq azup pekx rovg',
+                },
+            });
+            const mailOptions = {
+                from: 'vuduy.22122002@gmail.com',
+                to: 'vuduy.2212@gmail.com',
+                subject: 'Test email',
+                text: `Hello test email from nodejs`,
+            };
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return res.status(500).json({ message: 'Error sending email', error });
+                }
+                res.status(200).json({ message: 'User created and email sent' });
+            });
+        } catch (error) {
+            res.status(500).json(error);
         }
     },
 };
