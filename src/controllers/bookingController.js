@@ -100,7 +100,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'doctorData',
-                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber', 'positionId'],
+                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -109,29 +109,32 @@ const bookingController = {
                                 raw: true,
                                 nest: true,
                             },
-                            {
-                                model: db.Allcode,
-                                as: 'positionData',
-                                attributes: ['value'],
-                                raw: true,
-                                nest: true,
-                            },
 
                             {
-                                model: db.Clinic,
-                                attributes: ['name', 'address'],
-                                through: {
-                                    attributes: ['price'],
-                                },
+                                model: db.Doctor_Info,
+                                as: 'doctorInfo',
+                                attributes: ['price'],
+                                include: [
+                                    {
+                                        model: db.Clinic,
+                                        as: 'clinic',
+                                        attributes: ['id', 'name', 'address'],
+                                    },
+                                    {
+                                        model: db.Specialist,
+                                        as: 'specialist',
+                                        attributes: ['id', 'name'],
+                                    },
+                                    {
+                                        model: db.Allcode,
+                                        as: 'positionData',
+                                        attributes: ['value'],
+                                        raw: true,
+                                        nest: true,
+                                    },
+                                ],
                                 raw: true,
                                 nest: true,
-                            },
-                            {
-                                model: db.Specialist,
-                                attributes: ['name'],
-                                through: {
-                                    attributes: [],
-                                },
                             },
                         ],
                         raw: true,
@@ -153,11 +156,11 @@ const bookingController = {
                     nameDoctor: item.doctorData.lastName + '' + item.doctorData.firstName,
                     phoneNumberDoctor: item.doctorData.phoneNumber,
                     genderDoctor: item.doctorData.genderData.value,
-                    positionDoctor: item.doctorData.positionData.value,
-                    clinic: item.doctorData.Clinics.name,
-                    specialist: item.doctorData.Specialists.name,
-                    addressClinic: item.doctorData.Clinics.address,
-                    price: item.doctorData.Clinics.Doctor_Info.price,
+                    positionDoctor: item.doctorData.doctorInfo.positionData.value,
+                    clinic: item.doctorData.doctorInfo.clinic.name,
+                    specialist: item.doctorData.doctorInfo.specialist.name,
+                    addressClinic: item.doctorData.doctorInfo.clinic.address,
+                    price: item.doctorData.doctorInfo.price,
                     time: item.timeTypeBooking.value,
                     date: new Date(item.date).toLocaleDateString('en-GB'),
                     result: item.result,
@@ -269,7 +272,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'doctorData',
-                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber', 'positionId'],
+                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -278,29 +281,32 @@ const bookingController = {
                                 raw: true,
                                 nest: true,
                             },
-                            {
-                                model: db.Allcode,
-                                as: 'positionData',
-                                attributes: ['value'],
-                                raw: true,
-                                nest: true,
-                            },
 
                             {
-                                model: db.Clinic,
-                                attributes: ['name', 'address'],
-                                through: {
-                                    attributes: ['price'],
-                                },
+                                model: db.Doctor_Info,
+                                as: 'doctorInfo',
+                                attributes: ['price'],
+                                include: [
+                                    {
+                                        model: db.Clinic,
+                                        as: 'clinic',
+                                        attributes: ['id', 'name', 'address'],
+                                    },
+                                    {
+                                        model: db.Specialist,
+                                        as: 'specialist',
+                                        attributes: ['id', 'name'],
+                                    },
+                                    {
+                                        model: db.Allcode,
+                                        as: 'positionData',
+                                        attributes: ['value'],
+                                        raw: true,
+                                        nest: true,
+                                    },
+                                ],
                                 raw: true,
                                 nest: true,
-                            },
-                            {
-                                model: db.Specialist,
-                                attributes: ['name'],
-                                through: {
-                                    attributes: [],
-                                },
                             },
                         ],
                         raw: true,
@@ -322,11 +328,11 @@ const bookingController = {
                     nameDoctor: item.doctorData.lastName + '' + item.doctorData.firstName,
                     phoneNumberDoctor: item.doctorData.phoneNumber,
                     genderDoctor: item.doctorData.genderData.value,
-                    positionDoctor: item.doctorData.positionData.value,
-                    clinic: item.doctorData.Clinics.name,
-                    specialist: item.doctorData.Specialists.name,
-                    addressClinic: item.doctorData.Clinics.address,
-                    price: item.doctorData.Clinics.Doctor_Info.price,
+                    positionDoctor: item.doctorData.doctorInfo.positionData.value,
+                    clinic: item.doctorData.doctorInfo.clinic.name,
+                    specialist: item.doctorData.doctorInfo.specialist.name,
+                    addressClinic: item.doctorData.doctorInfo.clinic.address,
+                    price: item.doctorData.doctorInfo.price,
                     time: item.timeTypeBooking.value,
                     date: new Date(item.date).toLocaleDateString('en-GB'),
                     result: item.result,
@@ -395,7 +401,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'doctorData',
-                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber', 'positionId'],
+                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -404,29 +410,32 @@ const bookingController = {
                                 raw: true,
                                 nest: true,
                             },
-                            {
-                                model: db.Allcode,
-                                as: 'positionData',
-                                attributes: ['value'],
-                                raw: true,
-                                nest: true,
-                            },
 
                             {
-                                model: db.Clinic,
-                                attributes: ['name', 'address'],
-                                through: {
-                                    attributes: ['price'],
-                                },
+                                model: db.Doctor_Info,
+                                as: 'doctorInfo',
+                                attributes: ['price'],
+                                include: [
+                                    {
+                                        model: db.Clinic,
+                                        as: 'clinic',
+                                        attributes: ['id', 'name', 'address'],
+                                    },
+                                    {
+                                        model: db.Specialist,
+                                        as: 'specialist',
+                                        attributes: ['id', 'name'],
+                                    },
+                                    {
+                                        model: db.Allcode,
+                                        as: 'positionData',
+                                        attributes: ['value'],
+                                        raw: true,
+                                        nest: true,
+                                    },
+                                ],
                                 raw: true,
                                 nest: true,
-                            },
-                            {
-                                model: db.Specialist,
-                                attributes: ['name'],
-                                through: {
-                                    attributes: [],
-                                },
                             },
                         ],
                         raw: true,
@@ -448,11 +457,11 @@ const bookingController = {
                     nameDoctor: item.doctorData.lastName + '' + item.doctorData.firstName,
                     phoneNumberDoctor: item.doctorData.phoneNumber,
                     genderDoctor: item.doctorData.genderData.value,
-                    positionDoctor: item.doctorData.positionData.value,
-                    clinic: item.doctorData.Clinics.name,
-                    specialist: item.doctorData.Specialists.name,
-                    addressClinic: item.doctorData.Clinics.address,
-                    price: item.doctorData.Clinics.Doctor_Info.price,
+                    positionDoctor: item.doctorData.doctorInfo.positionData.value,
+                    clinic: item.doctorData.doctorInfo.clinic.name,
+                    specialist: item.doctorData.doctorInfo.specialist.name,
+                    addressClinic: item.doctorData.doctorInfo.clinic.address,
+                    price: item.doctorData.doctorInfo.price,
                     time: item.timeTypeBooking.value,
                     date: new Date(item.date).toLocaleDateString('en-GB'),
                     result: item.result,
@@ -480,12 +489,12 @@ const bookingController = {
                 include: [
                     {
                         model: db.Allcode,
-                        as: 'statusIdBooking',
+                        as: 'timeTypeBooking',
                         attributes: ['value'],
                     },
                     {
                         model: db.Allcode,
-                        as: 'timeTypeBooking',
+                        as: 'statusIdBooking',
                         attributes: ['value'],
                     },
                     {
@@ -507,7 +516,7 @@ const bookingController = {
                     {
                         model: db.User,
                         as: 'doctorData',
-                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber', 'positionId'],
+                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber'],
                         include: [
                             {
                                 model: db.Allcode,
@@ -516,29 +525,32 @@ const bookingController = {
                                 raw: true,
                                 nest: true,
                             },
-                            {
-                                model: db.Allcode,
-                                as: 'positionData',
-                                attributes: ['value'],
-                                raw: true,
-                                nest: true,
-                            },
 
                             {
-                                model: db.Clinic,
-                                attributes: ['name', 'address'],
-                                through: {
-                                    attributes: ['price'],
-                                },
+                                model: db.Doctor_Info,
+                                as: 'doctorInfo',
+                                attributes: ['price'],
+                                include: [
+                                    {
+                                        model: db.Clinic,
+                                        as: 'clinic',
+                                        attributes: ['id', 'name', 'address'],
+                                    },
+                                    {
+                                        model: db.Specialist,
+                                        as: 'specialist',
+                                        attributes: ['id', 'name'],
+                                    },
+                                    {
+                                        model: db.Allcode,
+                                        as: 'positionData',
+                                        attributes: ['value'],
+                                        raw: true,
+                                        nest: true,
+                                    },
+                                ],
                                 raw: true,
                                 nest: true,
-                            },
-                            {
-                                model: db.Specialist,
-                                attributes: ['name'],
-                                through: {
-                                    attributes: [],
-                                },
                             },
                         ],
                         raw: true,
@@ -551,7 +563,6 @@ const bookingController = {
             const dataFinal = data.map((item, index) => {
                 return {
                     id: item.id,
-                    status: item.statusIdBooking.value,
                     namePatient: item.patientData.lastName + '' + item.patientData.firstName,
                     phoneNumberPatient: item.patientData.phoneNumber,
                     yearOfBirthPatient: item.patientData.yearOfBirth,
@@ -561,12 +572,13 @@ const bookingController = {
                     nameDoctor: item.doctorData.lastName + '' + item.doctorData.firstName,
                     phoneNumberDoctor: item.doctorData.phoneNumber,
                     genderDoctor: item.doctorData.genderData.value,
-                    positionDoctor: item.doctorData.positionData.value,
-                    clinic: item.doctorData.Clinics.name,
-                    specialist: item.doctorData.Specialists.name,
-                    addressClinic: item.doctorData.Clinics.address,
-                    price: item.doctorData.Clinics.Doctor_Info.price,
+                    positionDoctor: item.doctorData.doctorInfo.positionData.value,
+                    clinic: item.doctorData.doctorInfo.clinic.name,
+                    specialist: item.doctorData.doctorInfo.specialist.name,
+                    addressClinic: item.doctorData.doctorInfo.clinic.address,
+                    price: item.doctorData.doctorInfo.price,
                     time: item.timeTypeBooking.value,
+                    status: item.statusIdBooking.value,
                     date: new Date(item.date).toLocaleDateString('en-GB'),
                     result: item.result,
                     timeBooking:

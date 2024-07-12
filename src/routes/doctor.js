@@ -6,13 +6,14 @@ const authMiddleware = require('../middleware/authMiddleware');
 router.get('/top-doctor-home/:limit', doctorController.getTopDoctorHome);
 router.get('/get-all-one-specialist/:id', doctorController.getAllOneSpecialist);
 router.get('/get-all-one-clinic/:id', doctorController.getAllOneClinic);
+router.get('/get-all-one-clinic-no-image/:id', doctorController.getAllDoctorOneClinicNoImage);
 
 // Update profile of 1 Doctor in page UpdateProfile by doctor
 router.patch(
     '/update-profile/:id',
     authMiddleware.verifyTokenAndUserAuthorization,
     authMiddleware.verifyTokenAndDoctor,
-    doctorController.UpdateProfileDoctor
+    doctorController.UpdateProfileDoctor,
 );
 
 // Get profile of 1 Doctor in page UpdateProfile by doctor
@@ -26,9 +27,18 @@ router.post(
     '/bulk-create-schedule/:id',
     authMiddleware.verifyTokenAndUserAuthorization,
     authMiddleware.verifyTokenAndDoctor,
-    doctorController.bulkCreateSchedule
+    doctorController.bulkCreateSchedule,
 );
 
 // Get Schedule Doctor
 router.get('/get-schedule-one-date/:id/:date', doctorController.getoneSchedule);
+
+router.post('/create-doctor-account', authMiddleware.verifyTokenAndAdminClinic, doctorController.createDoctorAccount);
+
+// Admin Clinic thao tác
+
+// Xoá bác sĩ
+
+// Get All Doctor (no image)
+router.delete('/delete-one-doctor/:id', authMiddleware.verifyTokenAndAdminClinic, doctorController.deleteOneDoctor);
 module.exports = router;

@@ -9,29 +9,25 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            User.belongsTo(models.Allcode, {
-                foreignKey: 'positionId',
-                targetKey: 'keyMap',
-                as: 'positionData',
-            });
+
             User.belongsTo(models.Allcode, {
                 foreignKey: 'gender',
                 targetKey: 'keyMap',
                 as: 'genderData',
             });
             User.hasOne(models.Markdown, { foreignKey: 'doctorId' });
-            User.belongsToMany(models.Clinic, {
-                through: {
-                    model: models.Doctor_Info,
-                },
-                foreignKey: 'doctorId',
-            });
-            User.belongsToMany(models.Specialist, {
-                through: {
-                    model: models.Doctor_Info,
-                },
-                foreignKey: 'doctorId',
-            });
+            // User.belongsToMany(models.Clinic, {
+            //     through: {
+            //         model: models.Doctor_Info,
+            //     },
+            //     foreignKey: 'doctorId',
+            // });
+            // User.belongsToMany(models.Specialist, {
+            //     through: {
+            //         model: models.Doctor_Info,
+            //     },
+            //     foreignKey: 'doctorId',
+            // });
             User.hasMany(models.Booking, {
                 foreignKey: 'patientId',
                 as: 'patientData',
@@ -40,7 +36,8 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'doctorId',
                 as: 'doctorData',
             });
-            User.hasOne(models.Doctor_Info, { foreignKey: 'doctorId' });
+            User.hasOne(models.Doctor_Info, { foreignKey: 'doctorId', as: 'doctorInfo' });
+            User.hasOne(models.Clinic, { foreignKey: 'adminClinicId' });
         }
     }
     User.init(
@@ -55,12 +52,11 @@ module.exports = (sequelize, DataTypes) => {
             gender: DataTypes.STRING,
             image: DataTypes.STRING,
             roleId: DataTypes.STRING,
-            positionId: DataTypes.STRING, // only doctor
         },
         {
             sequelize,
             modelName: 'User',
-        }
+        },
     );
     return User;
 };

@@ -10,11 +10,23 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             Clinic.hasOne(models.Markdown, { foreignKey: 'clinicId' });
-            Clinic.belongsToMany(models.User, {
-                through: {
-                    model: models.Doctor_Info,
-                },
-                foreignKey: 'clinicId',
+            // Clinic.belongsToMany(models.User, {
+            //     through: {
+            //         model: models.Doctor_Info,
+            //     },
+            //     foreignKey: 'clinicId',
+            // });
+            //Clinic.belongsTo(models.User, { foreignKey: 'adminClinicId' });
+            Clinic.hasMany(models.Doctor_Info, {
+                foreignKey: 'clinicId', // Khóa ngoại trong Doctor_Info tham chiếu đến Clinic
+                as: 'doctors', // Tên alias để truy vấn
+            });
+            Clinic.belongsTo(models.User, {
+                foreignKey: 'adminClinicId', // Khóa ngoại trong Doctor_Info tham chiếu đến Clinic
+                as: 'adminClinic', // Tên alias để truy vấn
+            });
+            Clinic.hasOne(models.Medication, {
+                foreignKey: 'clinicId', // Khóa ngoại trong Doctor_Info tham chiếu đến Clinic
             });
         }
     }
@@ -23,9 +35,9 @@ module.exports = (sequelize, DataTypes) => {
             name: DataTypes.STRING,
             address: DataTypes.STRING,
             phoneNumber: DataTypes.STRING,
-            adminClinicId: DataTypes.INTEGER,
             image: DataTypes.STRING,
             logo: DataTypes.STRING,
+            adminClinicId: DataTypes.INTEGER,
         },
         {
             sequelize,

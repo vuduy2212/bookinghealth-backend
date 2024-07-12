@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+import db from '../models/index';
 
 const authMiddleware = {
     async verifyToken(req, res, next) {
@@ -46,6 +47,34 @@ const authMiddleware = {
     verifyTokenAndDoctorAndAdmin(req, res, next) {
         authMiddleware.verifyToken(req, res, () => {
             if (req.user.roleId === 'R2' || req.user.roleId === 'R1') {
+                next();
+            } else {
+                res.status(403).json("You're not allowed to do that!");
+            }
+        });
+    },
+
+    verifyTokenToUpdateClinic(req, res, next) {
+        authMiddleware.verifyToken(req, res, async () => {
+            try {
+                if (req.user.roleId !== 'R4') {
+                    return res.status(403).json("You're not allowed to do that!");
+                }
+                const adminClinicId = req.params.id;
+
+                if (adminClinicId == req.user.id) {
+                    next();
+                } else {
+                    return res.status(403).json({ msg: 'Access denied' });
+                }
+            } catch (error) {
+                res.status(403).json("You're not allowed to do that !");
+            }
+        });
+    },
+    verifyTokenAndAdminClinic(req, res, next) {
+        authMiddleware.verifyToken(req, res, () => {
+            if (req.user.roleId === 'R4') {
                 next();
             } else {
                 res.status(403).json("You're not allowed to do that!");

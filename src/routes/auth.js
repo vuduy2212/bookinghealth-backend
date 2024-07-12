@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware');
+const utils = require('../utils/utils');
 // Register
 router.post('/register', authController.registerUser);
 
 //Create Clinic Admin Page
-router.post('/create-clinic-admin', authMiddleware.verifyTokenAndAdmin, authController.createClinicAdmin);
+router.post('/create-clinic-admin', authController.createClinicAdmin);
 
-router.post('/test-email', authController.testEmail);
+router.post('/test-email', utils.sendEmailAdminClinic);
 
 // Login
 router.post('/login', authController.loginUser);

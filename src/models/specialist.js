@@ -10,11 +10,15 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             Specialist.hasOne(models.Markdown, { foreignKey: 'specialistId' });
-            Specialist.belongsToMany(models.User, {
-                through: {
-                    model: models.Doctor_Info,
-                },
-                foreignKey: 'specialistId',
+            // Specialist.belongsToMany(models.User, {
+            //     through: {
+            //         model: models.Doctor_Info,
+            //     },
+            //     foreignKey: 'specialistId',
+            // });
+            Specialist.hasMany(models.Doctor_Info, {
+                foreignKey: 'specialistId', // Khóa ngoại trong Doctor_Info tham chiếu đến Clinic
+                as: 'doctors', // Tên alias để truy vấn
             });
         }
     }
@@ -26,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             sequelize,
             modelName: 'Specialist',
-        }
+        },
     );
     return Specialist;
 };

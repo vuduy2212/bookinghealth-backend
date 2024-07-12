@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
                 targetKey: 'keyMap',
                 as: 'statusIdBooking',
             });
+            Booking.hasOne(models.MedicalRecord, { foreignKey: 'bookingId' });
         }
     }
     Booking.init(
@@ -44,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             sequelize,
             modelName: 'Booking',
-        }
+        },
     );
     return Booking;
 };

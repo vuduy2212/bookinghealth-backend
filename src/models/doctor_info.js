@@ -9,7 +9,20 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Doctor_Info.belongsTo(models.Allcode, {
+                foreignKey: 'positionId',
+                targetKey: 'keyMap',
+                as: 'positionData',
+            });
             Doctor_Info.belongsTo(models.User, { foreignKey: 'doctorId' });
+            Doctor_Info.belongsTo(models.Clinic, {
+                foreignKey: 'clinicId', // Khóa ngoại trong Doctor_Info tham chiếu đến Clinic
+                as: 'clinic',
+            });
+            Doctor_Info.belongsTo(models.Specialist, {
+                foreignKey: 'specialistId', // Khóa ngoại trong Doctor_Info tham chiếu đến Specialist
+                as: 'specialist',
+            });
         }
     }
     Doctor_Info.init(
@@ -20,11 +33,12 @@ module.exports = (sequelize, DataTypes) => {
             price: DataTypes.INTEGER,
             note: DataTypes.STRING,
             count: DataTypes.INTEGER,
+            positionId: DataTypes.STRING, // only doctor
         },
         {
             sequelize,
             modelName: 'Doctor_Info',
-        }
+        },
     );
     return Doctor_Info;
 };

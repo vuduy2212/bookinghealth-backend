@@ -68,6 +68,7 @@ const authController = {
                     email: req.body.email,
                 },
             });
+
             if (!user) {
                 return res.status(404).json('Email không đúng, vui lòng thử lại');
             }
@@ -91,6 +92,17 @@ const authController = {
                     maxAge: 365 * 24 * 60 * 60 * 1000,
                 });
                 const { password, ...others } = user.dataValues;
+                const clinic = await db.Clinic.findOne({
+                    where: {
+                        adminClinicId: user.id,
+                    },
+                    attributes: ['id', 'name'],
+                });
+                if (clinic && user.roleId == 'R4') {
+                    return res
+                        .status(200)
+                        .json({ ...others, accessToken, clinicId: clinic.id, clinicName: clinic.name });
+                }
                 return res.status(200).json({ ...others, accessToken });
             }
         } catch (error) {
@@ -153,6 +165,7 @@ const authController = {
             });
             return res.status(200).json(newUser);
         } catch (err) {
+            console.log(err);
             return res.status(500).json(err);
         }
     },
@@ -170,7 +183,7 @@ const authController = {
                 from: 'vuduy.22122002@gmail.com',
                 to: 'vuduy.2212@gmail.com',
                 subject: 'Test email',
-                text: `Hello test email from nodejs`,
+                text: `test emial`,
             };
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
