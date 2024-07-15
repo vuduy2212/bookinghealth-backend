@@ -11,6 +11,7 @@ router.post(
 );
 
 router.get('/get-all-no-image', clinicController.getAllClinicNoImage);
+router.get('/get-all-clinic', clinicController.getAllClinic);
 router.get('/get-all-with-admin-info', clinicController.getAllClinicWithAdminInfo);
 
 router.get('/get-all-name', clinicController.getAllClinicName);

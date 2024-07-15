@@ -43,6 +43,18 @@ const clinicController = {
             res.status(500).json(error);
         }
     },
+    async getAllClinic(req, res) {
+        try {
+            const response = await db.Clinic.findAll({
+                attributes: {
+                    exclude: ['image'],
+                },
+            });
+            res.status(200).json(response);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
     async getAllClinicWithAdminInfo(req, res) {
         //  get image
         try {

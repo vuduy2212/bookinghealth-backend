@@ -98,14 +98,24 @@ const authController = {
                     },
                     attributes: ['id', 'name'],
                 });
+                const doctorInfo = await db.Doctor_Info.findOne({
+                    where: {
+                        doctorId: user.id,
+                    },
+                    attributes: ['clinicId'],
+                });
                 if (clinic && user.roleId == 'R4') {
                     return res
                         .status(200)
                         .json({ ...others, accessToken, clinicId: clinic.id, clinicName: clinic.name });
                 }
+                if (doctorInfo && user.roleId == 'R2') {
+                    return res.status(200).json({ ...others, accessToken, clinicId: doctorInfo.clinicId });
+                }
                 return res.status(200).json({ ...others, accessToken });
             }
         } catch (error) {
+            console.log(error);
             return res.status(500).json(error);
         }
     },
@@ -193,6 +203,40 @@ const authController = {
             });
         } catch (error) {
             res.status(500).json(error);
+        }
+    },
+    async changePassword(req, res) {
+        try {
+            console.log('sdfsd');
+            const userId = req.user.id; // Giả sử bạn đã xác thực và có userId trong req.user
+            console.log(userId);
+            const { oldPassword, newPassword } = req.body;
+
+            const user = await db.User.findOne({
+                where: { id: userId },
+            });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Kiểm tra mật khẩu cũ
+            const isMatch = await bcrypt.compare(oldPassword, user.password);
+            if (!isMatch) {
+                return res.status(400).json({ message: 'Old password is incorrect' });
+            }
+
+            // Mã hóa mật khẩu mới
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+            // Cập nhật mật khẩu mới trong cơ sở dữ liệu
+            user.password = hashedPassword;
+            await user.save();
+
+            res.status(200).json({ message: 'Password changed successfully' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server error' });
         }
     },
 };

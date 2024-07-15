@@ -3,6 +3,8 @@ import db from '../models/index';
 
 const authMiddleware = {
     async verifyToken(req, res, next) {
+        console.log('sdfsd');
+
         const token = req.headers.token; // Lấy token từ user login
         if (token) {
             const accessToken = token.split(' ')[1]; // token : Bearer 61d5s1fsdf5s1df3
@@ -78,6 +80,39 @@ const authMiddleware = {
                 next();
             } else {
                 res.status(403).json("You're not allowed to do that!");
+            }
+        });
+    },
+
+    async checkCancelPermission(req, res, next) {
+        authMiddleware.verifyToken(req, res, async () => {
+            const bookingId = req.params.id;
+            const userId = req.user.id;
+            const userRole = req.user.roleId; // Assuming role is stored in req.user after authentication
+
+            try {
+                const booking = await db.Booking.findOne({
+                    where: { id: bookingId },
+                    raw: true,
+                    nest: true,
+                });
+
+                if (!booking) {
+                    return res.status(404).json({ message: 'Booking not found' });
+                }
+
+                const isAdminClinic = userRole === 'R4';
+                const isDoctor = userRole === 'R2' && userId === booking.doctorId;
+                const isPatient = userRole === 'R3' && userId === booking.patientId;
+
+                if (isAdminClinic || isDoctor || isPatient) {
+                    return next();
+                } else {
+                    return res.status(403).json("You're not allowed to do that!");
+                }
+            } catch (error) {
+                console.error(error);
+                return res.status(500).json({ message: 'Internal server error' });
             }
         });
     },

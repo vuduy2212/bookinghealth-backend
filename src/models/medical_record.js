@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     class MedicalRecord extends Model {
         static associate(models) {
             MedicalRecord.belongsTo(models.Booking, { foreignKey: 'bookingId' });
-            MedicalRecord.hasMany(models.Prescription, { foreignKey: 'medical_record_id' });
+            MedicalRecord.hasMany(models.Prescription, { foreignKey: 'medical_record_id', as: 'prescriptions' });
         }
     }
     MedicalRecord.init(

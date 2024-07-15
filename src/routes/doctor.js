@@ -4,6 +4,7 @@ import doctorController from '../controllers/doctorController';
 const authMiddleware = require('../middleware/authMiddleware');
 // Get Top Doctor in Home Page
 router.get('/top-doctor-home/:limit', doctorController.getTopDoctorHome);
+router.get('/get-all-doctor', doctorController.getAllDoctor);
 router.get('/get-all-one-specialist/:id', doctorController.getAllOneSpecialist);
 router.get('/get-all-one-clinic/:id', doctorController.getAllOneClinic);
 router.get('/get-all-one-clinic-no-image/:id', doctorController.getAllDoctorOneClinicNoImage);

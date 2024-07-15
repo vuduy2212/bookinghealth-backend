@@ -32,9 +32,7 @@ module.exports = {
             reason: {
                 type: Sequelize.TEXT('long'),
             },
-            result: {
-                type: Sequelize.BLOB('long'),
-            },
+
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,

@@ -163,12 +163,123 @@ const bookingController = {
                     price: item.doctorData.doctorInfo.price,
                     time: item.timeTypeBooking.value,
                     date: new Date(item.date).toLocaleDateString('en-GB'),
-                    result: item.result,
                     timeBooking:
                         new Date(item.createdAt).toLocaleTimeString() +
                         ' ' +
                         new Date(item.createdAt).toLocaleDateString('en-GB'),
                 };
+            });
+            return res.status(200).json(dataFinal);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(error);
+        }
+    },
+
+    async getAllNewBookingOneClinic(req, res) {
+        try {
+            const data = await db.Booking.findAll({
+                where: {
+                    statusId: 'S1',
+                },
+                include: [
+                    {
+                        model: db.Allcode,
+                        as: 'timeTypeBooking',
+                        attributes: ['value'],
+                    },
+                    {
+                        model: db.User,
+                        as: 'patientData',
+                        attributes: ['firstName', 'lastName', 'gender', 'address', 'yearOfBirth', 'phoneNumber'],
+                        include: [
+                            {
+                                model: db.Allcode,
+                                as: 'genderData',
+                                attributes: ['value'],
+                                raw: true,
+                                nest: true,
+                            },
+                        ],
+                        raw: true,
+                        nest: true,
+                    },
+                    {
+                        model: db.User,
+                        as: 'doctorData',
+                        attributes: ['firstName', 'lastName', 'gender', 'phoneNumber'],
+                        include: [
+                            {
+                                model: db.Allcode,
+                                as: 'genderData',
+                                attributes: ['value'],
+                                raw: true,
+                                nest: true,
+                            },
+
+                            {
+                                model: db.Doctor_Info,
+                                as: 'doctorInfo',
+                                attributes: ['price'],
+                                // where: { clinicId: req.params.id }, // Lọc theo clinicId
+                                include: [
+                                    {
+                                        model: db.Clinic,
+                                        as: 'clinic',
+                                        attributes: ['id', 'name', 'address'],
+                                    },
+                                    {
+                                        model: db.Specialist,
+                                        as: 'specialist',
+                                        attributes: ['id', 'name'],
+                                    },
+                                    {
+                                        model: db.Allcode,
+                                        as: 'positionData',
+                                        attributes: ['value'],
+                                        raw: true,
+                                        nest: true,
+                                    },
+                                ],
+                                raw: true,
+                                nest: true,
+                            },
+                        ],
+                        raw: true,
+                        nest: true,
+                    },
+                ],
+                raw: true,
+                nest: true,
+            });
+            const dataFormated = data.map((item, index) => {
+                return {
+                    id: item.id,
+                    namePatient: item.patientData.lastName + ' ' + item.patientData.firstName,
+                    phoneNumberPatient: item.patientData.phoneNumber,
+                    yearOfBirthPatient: item.patientData.yearOfBirth,
+                    genderPatient: item.patientData.genderData.value,
+                    addressPatient: item.patientData.address,
+                    reason: item.reason,
+                    nameDoctor: item.doctorData.lastName + ' ' + item.doctorData.firstName,
+                    phoneNumberDoctor: item.doctorData.phoneNumber,
+                    genderDoctor: item.doctorData.genderData.value,
+                    positionDoctor: item.doctorData.doctorInfo.positionData.value,
+                    clinic: item.doctorData.doctorInfo.clinic.name,
+                    clinicId: item.doctorData.doctorInfo.clinic.id,
+                    specialist: item.doctorData.doctorInfo.specialist.name,
+                    addressClinic: item.doctorData.doctorInfo.clinic.address,
+                    price: item.doctorData.doctorInfo.price,
+                    time: item.timeTypeBooking.value,
+                    date: new Date(item.date).toLocaleDateString('en-GB'),
+                    timeBooking:
+                        new Date(item.createdAt).toLocaleTimeString() +
+                        ' ' +
+                        new Date(item.createdAt).toLocaleDateString('en-GB'),
+                };
+            });
+            const dataFinal = dataFormated.filter((element) => {
+                return (element.clinicId = req.params.id);
             });
             return res.status(200).json(dataFinal);
         } catch (error) {
@@ -197,6 +308,25 @@ const bookingController = {
         }
     },
     async cancelBooking(req, res) {
+        try {
+            await db.Booking.update(
+                {
+                    statusId: 'S4',
+                },
+                {
+                    where: {
+                        id: req.params.id,
+                    },
+                    raw: true,
+                },
+            );
+            return res.status(200).json('cancelBooking Successfully');
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(error);
+        }
+    },
+    async deleteBooking(req, res) {
         try {
             const booking = await db.Booking.findOne({
                 where: {
@@ -319,13 +449,13 @@ const bookingController = {
             const dataFinal = data.map((item, index) => {
                 return {
                     id: item.id,
-                    namePatient: item.patientData.lastName + '' + item.patientData.firstName,
+                    namePatient: item.patientData.lastName + ' ' + item.patientData.firstName,
                     phoneNumberPatient: item.patientData.phoneNumber,
                     yearOfBirthPatient: item.patientData.yearOfBirth,
                     genderPatient: item.patientData.genderData.value,
                     addressPatient: item.patientData.address,
                     reason: item.reason,
-                    nameDoctor: item.doctorData.lastName + '' + item.doctorData.firstName,
+                    nameDoctor: item.doctorData.lastName + ' ' + item.doctorData.firstName,
                     phoneNumberDoctor: item.doctorData.phoneNumber,
                     genderDoctor: item.doctorData.genderData.value,
                     positionDoctor: item.doctorData.doctorInfo.positionData.value,
@@ -335,7 +465,6 @@ const bookingController = {
                     price: item.doctorData.doctorInfo.price,
                     time: item.timeTypeBooking.value,
                     date: new Date(item.date).toLocaleDateString('en-GB'),
-                    result: item.result,
                     timeBooking:
                         new Date(item.createdAt).toLocaleTimeString() +
                         ' ' +
@@ -353,7 +482,6 @@ const bookingController = {
             await db.Booking.update(
                 {
                     statusId: 'S3',
-                    result: req.body.file,
                 },
                 {
                     where: {
@@ -368,6 +496,7 @@ const bookingController = {
             return res.status(500).json(error);
         }
     },
+
     async getPatientExaminedOneDate(req, res) {
         try {
             const data = await db.Booking.findAll({
@@ -448,13 +577,13 @@ const bookingController = {
             const dataFinal = data.map((item, index) => {
                 return {
                     id: item.id,
-                    namePatient: item.patientData.lastName + '' + item.patientData.firstName,
+                    namePatient: item.patientData.lastName + ' ' + item.patientData.firstName,
                     phoneNumberPatient: item.patientData.phoneNumber,
                     yearOfBirthPatient: item.patientData.yearOfBirth,
                     genderPatient: item.patientData.genderData.value,
                     addressPatient: item.patientData.address,
                     reason: item.reason,
-                    nameDoctor: item.doctorData.lastName + '' + item.doctorData.firstName,
+                    nameDoctor: item.doctorData.lastName + ' ' + item.doctorData.firstName,
                     phoneNumberDoctor: item.doctorData.phoneNumber,
                     genderDoctor: item.doctorData.genderData.value,
                     positionDoctor: item.doctorData.doctorInfo.positionData.value,
@@ -464,7 +593,6 @@ const bookingController = {
                     price: item.doctorData.doctorInfo.price,
                     time: item.timeTypeBooking.value,
                     date: new Date(item.date).toLocaleDateString('en-GB'),
-                    result: item.result,
                     timeBooking:
                         new Date(item.createdAt).toLocaleTimeString() +
                         ' ' +
@@ -563,13 +691,13 @@ const bookingController = {
             const dataFinal = data.map((item, index) => {
                 return {
                     id: item.id,
-                    namePatient: item.patientData.lastName + '' + item.patientData.firstName,
+                    namePatient: item.patientData.lastName + ' ' + item.patientData.firstName,
                     phoneNumberPatient: item.patientData.phoneNumber,
                     yearOfBirthPatient: item.patientData.yearOfBirth,
                     genderPatient: item.patientData.genderData.value,
                     addressPatient: item.patientData.address,
                     reason: item.reason,
-                    nameDoctor: item.doctorData.lastName + '' + item.doctorData.firstName,
+                    nameDoctor: item.doctorData.lastName + ' ' + item.doctorData.firstName,
                     phoneNumberDoctor: item.doctorData.phoneNumber,
                     genderDoctor: item.doctorData.genderData.value,
                     positionDoctor: item.doctorData.doctorInfo.positionData.value,
@@ -580,7 +708,6 @@ const bookingController = {
                     time: item.timeTypeBooking.value,
                     status: item.statusIdBooking.value,
                     date: new Date(item.date).toLocaleDateString('en-GB'),
-                    result: item.result,
                     timeBooking:
                         new Date(item.createdAt).toLocaleTimeString() +
                         ' ' +

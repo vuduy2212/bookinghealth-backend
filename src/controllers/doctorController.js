@@ -50,6 +50,44 @@ const doctorController = {
             return res.status(500).json(error);
         }
     },
+    async getAllDoctor(req, res) {
+        try {
+            const response = await db.User.findAll({
+                where: { roleId: 'R2' },
+                raw: true,
+                attributes: { exclude: ['password', 'image'] },
+                include: [
+                    {
+                        model: db.Doctor_Info,
+                        as: 'doctorInfo',
+                        attributes: ['id'],
+                        include: [
+                            {
+                                model: db.Clinic,
+                                as: 'clinic',
+                                attributes: ['id', 'name'],
+                            },
+                            {
+                                model: db.Specialist,
+                                as: 'specialist',
+                                attributes: ['id', 'name'],
+                            },
+                            {
+                                model: db.Allcode,
+                                as: 'positionData',
+                                attributes: ['value'],
+                            },
+                        ],
+                    },
+                ],
+            });
+
+            return res.status(200).json(response);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(error);
+        }
+    },
     async UpdateProfileDoctor(req, res) {
         try {
             const infoDoctor = await db.Doctor_Info.findOne({

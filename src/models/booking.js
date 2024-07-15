@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
                 targetKey: 'keyMap',
                 as: 'statusIdBooking',
             });
-            Booking.hasOne(models.MedicalRecord, { foreignKey: 'bookingId' });
+            Booking.hasOne(models.MedicalRecord, { foreignKey: 'bookingId', as: 'medicalRecord' });
         }
     }
     Booking.init(
@@ -40,7 +40,6 @@ module.exports = (sequelize, DataTypes) => {
             date: DataTypes.DATE,
             timeType: DataTypes.STRING,
             reason: DataTypes.TEXT('long'),
-            result: DataTypes.STRING,
         },
         {
             sequelize,

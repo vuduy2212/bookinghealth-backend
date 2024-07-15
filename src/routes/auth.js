@@ -19,4 +19,7 @@ router.post('/refresh-token', authController.requestRefreshToken);
 
 // Log Out
 router.post('/logout', authController.logOut);
+
+router.put('/change-password', authMiddleware.verifyToken, authController.changePassword);
+
 module.exports = router;
